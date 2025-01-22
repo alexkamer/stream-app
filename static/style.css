@@ -1,0 +1,103 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #2a9d8f;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #264653;
+    color: white;
+}
+
+thead th {
+    padding: 12px;
+    font-size: 16px;
+}
+
+tbody tr {
+    transition: background-color 0.3s;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+td:last-child {
+    text-align: center;
+}
+
+.filter-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #457b9d;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover {
+    background-color: #1d3557;
+}
+
+.filter-btn.active {
+    background-color: #1d3557;
+}
+
+.watch-btn {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #2a9d8f;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.watch-btn:hover {
+    background-color: #21867a;
+}

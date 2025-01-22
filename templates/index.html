@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Live Streams</h1>
+
+<!-- Sport Filter Buttons -->
+<div class="filter-buttons">
+    <a href="/" class="filter-btn {% if not selected_sport %}active{% endif %}">All</a>
+    {% for sport in sports %}
+    <a href="/?sport={{ sport }}" class="filter-btn {% if selected_sport == sport %}active{% endif %}">
+        {{ sport }}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Live Streams Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Game Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stream in streams %}
+        <tr>
+            <td>{{ stream.game_name }}</td>
+            <td>{{ stream.display_date }}</td>
+            <td>{{ stream.start_time }}</td>
+            <td>
+                <form action="/stream" method="post" style="display:inline;">
+                    <input type="hidden" name="game_name" value="{{ stream.game_name }}">
+                    <input type="hidden" name="game_url" value="{{ stream.href }}">
+                    <button type="submit" class="watch-btn">Watch</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

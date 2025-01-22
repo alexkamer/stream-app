@@ -1,0 +1,94 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# VS Code settings
+.vscode/
+
+# PyCharm settings
+.idea/
+
+# Distribution files
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+sdist/
+wheels/
+
+# Unit test and coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# PyInstaller
+# Usually these files are written by a python script from a template
+# before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Docker
+*.dockerfile
+.dockerignore
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and debug files
+*.log
+*.trace
+*.err
+*.out
+
+# Local environment files
+.env
+.env.*
+.local_env
+.secret
+*.credentials
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+
+# Backup files
+*.bak
+*.swp
+*.swo
+*.tmp
+*.orig
+*.rej
+
+# Project-specific ignores
+instance/
+.idea/
+*.sqlite3
+
+# Datasets
+# boxStreams.db
