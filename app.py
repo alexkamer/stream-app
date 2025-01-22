@@ -76,7 +76,6 @@ def player_boxscore():
     if sport_name == 'nba':
         away_team = game_name.split(' vs ')[0]
         home_team = game_name.split(' vs ')[1]
-        home_team = "Brooklyn Nets"
         day_scoreboard_url = f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?limit=1000&dates={date_today}"
         day_scoreboard_response = httpx.get(day_scoreboard_url,timeout=10)
         day_scoreboard_response.raise_for_status()
@@ -89,7 +88,6 @@ def player_boxscore():
 
                 if away_team in [game_away, game_home] or home_team in [game_away, game_home]:
                     espn_game_id = game.get('id')
-                    espn_game_id = "401705172"
                     espn_game_url = f"https://site.web.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event={espn_game_id}"
                     espn_game_response = httpx.get(espn_game_url,timeout=10)
                     espn_game_response.raise_for_status()

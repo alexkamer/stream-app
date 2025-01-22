@@ -87,10 +87,17 @@
 <!-- Player Boxscore -->
 <div class="player-boxscore">
     <h2>Player Boxscore</h2>
+    
+    <!-- Tabs for Teams -->
+    <div class="team-tabs">
+        <!-- Tabs will be dynamically populated here -->
+    </div>
+    
+    <!-- Player Boxscore Table -->
     <table id="player-boxscore-table">
         <thead>
             <tr>
-                <th>Team</th>
+                <!-- <th>Team</th> -->
                 <th>Name</th>
                 <th>Is Starter</th>
                 <th>MIN</th>
@@ -107,7 +114,6 @@
                 <th>PF</th>
                 <th>+/-</th>
                 <th>PTS</th>
-
             </tr>
         </thead>
         <tbody>
@@ -117,6 +123,8 @@
 </div>
 
 <script>
+    let allPlayers = []; // Store all players globally for filtering
+
     // Function to fetch player and team boxscore data
     async function fetchBoxscores() {
         const gameName = "{{ game_name }}";
@@ -126,7 +134,9 @@
         if (response.ok) {
             const data = await response.json();
             updateTeamBoxscoreTable(data.teams);
-            updatePlayerBoxscoreTable(data.players);
+            allPlayers = data.players; // Store all players globally
+            createTeamTabs(data.players); // Create tabs based on teams
+            updatePlayerBoxscoreTable(allPlayers); // Default to show all players
         }
     }
 
@@ -162,10 +172,40 @@
                 <td>${team.PointsInPaint}</td>
                 <td>${team.Fouls}</td>
                 <td>${team.LargestLead}</td>
-
             `;
             tbody.appendChild(row);
         });
+    }
+
+    // Function to create team tabs dynamically
+    function createTeamTabs(players) {
+        const teamTabs = document.querySelector('.team-tabs');
+        teamTabs.innerHTML = ''; // Clear existing tabs
+
+        // Get unique team names
+        const teams = [...new Set(players.map(player => player.Team))];
+
+        // Create a tab for each team
+        teams.forEach(team => {
+            const button = document.createElement('button');
+            button.className = 'team-tab';
+            button.textContent = team;
+            button.onclick = () => filterPlayersByTeam(team); // Filter players by team on click
+            teamTabs.appendChild(button);
+        });
+
+        // Add an "All" tab
+        const allButton = document.createElement('button');
+        allButton.className = 'team-tab';
+        allButton.textContent = 'All';
+        allButton.onclick = () => updatePlayerBoxscoreTable(allPlayers); // Show all players
+        teamTabs.appendChild(allButton);
+    }
+
+    // Function to filter players by team
+    function filterPlayersByTeam(team) {
+        const filteredPlayers = allPlayers.filter(player => player.Team === team);
+        updatePlayerBoxscoreTable(filteredPlayers);
     }
 
     // Function to update the player boxscore table
@@ -176,7 +216,6 @@
         players.forEach(player => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${player.Team}</td>
                 <td>${player.Name}</td>
                 <td>${player.IsStarter}</td>
                 <td>${player.MIN}</td>
@@ -193,9 +232,6 @@
                 <td>${player.PF}</td>
                 <td>${player.plusMinus}</td>
                 <td>${player.PTS}</td>
-
-
-
             `;
             tbody.appendChild(row);
         });
@@ -207,4 +243,26 @@
     // Initial fetch
     fetchBoxscores();
 </script>
+
+<style>
+    .team-tabs {
+        margin-bottom: 20px;
+    }
+
+    .team-tab {
+        margin-right: 5px;
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #264653;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .team-tab:hover {
+        background-color: #2a9d8f;
+    }
+</style>
+
 {% endblock %}
