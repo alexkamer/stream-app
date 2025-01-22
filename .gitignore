@@ -92,3 +92,4 @@ instance/
 
 # Datasets
 # boxStreams.db
+streamApp.py

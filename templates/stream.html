@@ -1,7 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ game_name }}</h1>
-<h1>{{ game_url }}</h1>
-<p>Stream content will go here.</p>
+<h1>Stream Page</h1>
+
+<!-- Stream Selection Buttons -->
+<div class="stream-buttons">
+    <div class="home-button" style="display: inline;">
+        <a href="/" class="home-btn">🏠</a>
+    </div>
+    <form method="post" style="display: inline;">
+        <input type="hidden" name="stream_name" value="1">
+        <input type="hidden" name="game_name" value="{{ game_name }}">
+        <input type="hidden" name="game_url" value="{{ game_url }}">
+        <button type="submit" class="stream-btn">Stream 1</button>
+    </form>
+    <form method="post" style="display: inline;">
+        <input type="hidden" name="stream_name" value="2">
+        <input type="hidden" name="game_name" value="{{ game_name }}">
+        <input type="hidden" name="game_url" value="{{ game_url }}">
+        <button type="submit" class="stream-btn">Stream 2</button>
+    </form>
+    <form method="post" style="display: inline;">
+        <input type="hidden" name="stream_name" value="3">
+        <input type="hidden" name="game_name" value="{{ game_name }}">
+        <input type="hidden" name="game_url" value="{{ game_url }}">
+        <button type="submit" class="stream-btn">Stream 3</button>
+    </form>
+</div>
+
+<!-- Display Selected Stream -->
+<div class="stream-display">
+    <h2>Selected Stream:</h2>
+    <p>{{ selected_stream }}</p>
+    <p>{{ game_name }}</p>
+    <p>https://embedsports.me/{{ game_url }}-{{ selected_stream }}</p>
+
+    <div class="iframe-container">
+        <iframe src="https://embedsports.me/{{ game_url }}-{{ selected_stream }}" 
+                scrolling="no" 
+                allowfullscreen 
+                allowtransparency 
+                referrerpolicy="unsafe-url">
+        </iframe>
+    </div>
+</div>
+
+<!-- Player Boxscore -->
+<div class="player-boxscore">
+    <h2>Player Boxscore</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Points</th>
+                <th>Rebounds</th>
+                <th>Assists</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in player_boxscore %}
+            <tr>
+                <td>{{ player.name }}</td>
+                <td>{{ player.points }}</td>
+                <td>{{ player.rebounds }}</td>
+                <td>{{ player.assists }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
