@@ -70,7 +70,6 @@ def player_boxscore():
     game_name = request.args.get('game_name', "Unknown Game")
     game_url = request.args.get('game_url', "N/A")
     date_today = datetime.today().strftime("%Y%m%d")
-    date_today = "20250121"
     print(date_today)
     sport_name = game_url.split('/')[0]
     if sport_name == 'nba':
