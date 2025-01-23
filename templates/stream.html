@@ -51,35 +51,11 @@
     <table id="team-boxscore-table">
         <thead>
             <tr>
-                <th>Team</th>
-                <th>FGM-FGA</th>
-                <th>FG%</th>
-                <th>3PTM-3PTA</th>
-                <th>3PT%</th>
-                <th>FTM-FTA</th>
-                <th>FT%</th>
-                <th>REB</th>
-                <th>OREB</th>
-                <th>DREB</th>
-                <th>AST</th>
-                <th>STL</th>
-                <th>BLK</th>
-                <th>TO</th>
-                <th>TTO</th>
-                <th>ToTo</th>
-                <th>TECH</th>
-                <th>ToTECH</th>
-                <th>FLAG</th>
-                <th>Points Conceded Off Turnovers</th>
-                <th>FBPs</th>
-                <th>PIP</th>
-                <th>PF</th>
-                <th>LL</th>
-
+                <!-- Headers will be dynamically populated -->
             </tr>
         </thead>
         <tbody>
-            <!-- Rows will be dynamically populated here -->
+            <!-- Rows will be dynamically populated -->
         </tbody>
     </table>
 </div>
@@ -87,43 +63,79 @@
 <!-- Player Boxscore -->
 <div class="player-boxscore">
     <h2>Player Boxscore</h2>
-    
+
     <!-- Tabs for Teams -->
     <div class="team-tabs">
-        <!-- Tabs will be dynamically populated here -->
+        <!-- Tabs will be dynamically populated -->
     </div>
-    
+
     <!-- Player Boxscore Table -->
     <table id="player-boxscore-table">
         <thead>
             <tr>
-                <!-- <th>Team</th> -->
-                <th>Name</th>
-                <th>Is Starter</th>
-                <th>MIN</th>
-                <th>FGM-FGA</th>
-                <th>3PTM-3PTA</th>
-                <th>FTM-FTA</th>
-                <th>OREB</th>
-                <th>DREB</th>
-                <th>REB</th>
-                <th>AST</th>
-                <th>STL</th>
-                <th>BLK</th>
-                <th>TO</th>
-                <th>PF</th>
-                <th>+/-</th>
-                <th>PTS</th>
+                <!-- Headers will be dynamically populated -->
             </tr>
         </thead>
         <tbody>
-            <!-- Rows will be dynamically populated here -->
+            <!-- Rows will be dynamically populated -->
         </tbody>
     </table>
 </div>
 
 <script>
-    let allPlayers = []; // Store all players globally for filtering
+    let currentSport = 'nba'; // Default to NBA for this implementation
+    let allPlayers = []; // Store all players for filtering
+
+    // Column configurations for NBA
+    const columnConfigurations = {
+        nba: {
+            team: [
+                "Team",
+                "FG",
+                "fieldGoalPct",
+                "3PT",
+                "threePointFieldGoalPct",
+                "FT",
+                "freeThrowPct",
+                "Rebounds",
+                "Offensive Rebounds",
+                "Defensive Rebounds",
+                "Assists",
+                "Steals",
+                "Blocks",
+                "Turnovers",
+                "Team Turnovers",
+                "Total Turnovers",
+                "Technical Fouls",
+                "Total Technical Fouls",
+                "Flagrant Fouls",
+                "Points Conceded Off Turnovers",
+                "Fast Break Points",
+                "Points in Paint",
+                "Fouls",
+                "Largest Lead"
+            ],
+            player: [
+                "Team",
+                "Name",
+                "IsStarter",
+                "MIN",
+                "FG",
+                "3PT",
+                "FT",
+                "OREB",
+                "DREB",
+                "REB",
+                "AST",
+                "STL",
+                "BLK",
+                "TO",
+                "PF",
+                "+/-",
+                "PTS"
+            ]
+        }
+    };
 
     // Function to fetch player and team boxscore data
     async function fetchBoxscores() {
@@ -133,46 +145,34 @@
         const response = await fetch(`/player_boxscore?game_name=${encodeURIComponent(gameName)}&game_url=${encodeURIComponent(gameUrl)}`);
         if (response.ok) {
             const data = await response.json();
-            updateTeamBoxscoreTable(data.teams);
+            console.log("Fetched Team Data:", data.teams);
+            console.log("Fetched Player Data:", data.players);
+
+            updateTeamBoxscoreTable(data.teams); // Populate the Team Boxscore
             allPlayers = data.players; // Store all players globally
             createTeamTabs(data.players); // Create tabs based on teams
             updatePlayerBoxscoreTable(allPlayers); // Default to show all players
         }
     }
 
+    // Function to update the table headers dynamically
+    function updateTableHeaders(tableId, columns) {
+        const thead = document.querySelector(`#${tableId} thead`);
+        thead.innerHTML = '<tr>' + columns.map(col => `<th>${col}</th>`).join('') + '</tr>';
+    }
+
     // Function to update the team boxscore table
     function updateTeamBoxscoreTable(teams) {
+        const columns = columnConfigurations[currentSport]?.team || [];
+        updateTableHeaders("team-boxscore-table", columns);
+
         const tbody = document.querySelector('#team-boxscore-table tbody');
-        tbody.innerHTML = ''; // Clear existing rows
+        tbody.innerHTML = '';
 
         teams.forEach(team => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${team.Team}</td>
-                <td>${team.FG}</td>
-                <td>${team.fieldGoalPct}</td>
-                <td>${team.threePointers}</td>
-                <td>${team.threePointFieldGoalPct}</td>
-                <td>${team.FT}</td>
-                <td>${team.freeThrowPct}</td>
-                <td>${team.Rebounds}</td>
-                <td>${team.OffensiveRebounds}</td>
-                <td>${team.DefensiveRebounds}</td>
-                <td>${team.Assists}</td>
-                <td>${team.Steals}</td>
-                <td>${team.Blocks}</td>
-                <td>${team.Turnover}</td>
-                <td>${team.TeamTurnovers}</td>
-                <td>${team.TotalTurnovers}</td>
-                <td>${team.TechnicalFouls}</td>
-                <td>${team.TotalTechnicalFouls}</td>
-                <td>${team.FlagrantFouls}</td>
-                <td>${team.PointsConcededOffTurnovers}</td>
-                <td>${team.FastBreakPoints}</td>
-                <td>${team.PointsInPaint}</td>
-                <td>${team.Fouls}</td>
-                <td>${team.LargestLead}</td>
-            `;
+            row.innerHTML = columns.map(col => `<td>${team[col] || ''}</td>`).join('');
+            console.log("Generated Team Row:", row.innerHTML); // Debugging
             tbody.appendChild(row);
         });
     }
@@ -210,38 +210,23 @@
 
     // Function to update the player boxscore table
     function updatePlayerBoxscoreTable(players) {
+        const columns = columnConfigurations[currentSport]?.player || [];
+        updateTableHeaders("player-boxscore-table", columns);
+
         const tbody = document.querySelector('#player-boxscore-table tbody');
-        tbody.innerHTML = ''; // Clear existing rows
+        tbody.innerHTML = '';
 
         players.forEach(player => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${player.Name}</td>
-                <td>${player.IsStarter}</td>
-                <td>${player.MIN}</td>
-                <td>${player.FG}</td>
-                <td>${player.threePT}</td>
-                <td>${player.FT}</td>
-                <td>${player.OREB}</td>
-                <td>${player.DREB}</td>
-                <td>${player.REB}</td>
-                <td>${player.AST}</td>
-                <td>${player.STL}</td>
-                <td>${player.BLK}</td>
-                <td>${player.TO}</td>
-                <td>${player.PF}</td>
-                <td>${player.plusMinus}</td>
-                <td>${player.PTS}</td>
-            `;
+            row.innerHTML = columns.map(col => `<td>${player[col] || ''}</td>`).join('');
+            console.log("Generated Player Row:", row.innerHTML); // Debugging
             tbody.appendChild(row);
         });
     }
 
-    // Refresh both boxscores every 10 seconds
-    setInterval(fetchBoxscores, 10000);
-
-    // Initial fetch
+    // Fetch boxscores initially and refresh every 10 seconds
     fetchBoxscores();
+    setInterval(fetchBoxscores, 10000);
 </script>
 
 <style>
@@ -264,5 +249,4 @@
         background-color: #2a9d8f;
     }
 </style>
-
 {% endblock %}
