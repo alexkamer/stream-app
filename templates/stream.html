@@ -85,8 +85,8 @@
 <script>
     let currentSport = 'nba'; // Default to NBA for this implementation
     let allPlayers = []; // Store all players for filtering
+    let currentTeam = null; // Track the currently selected team
 
-    // Column configurations for NBA
     const columnConfigurations = {
         nba: {
             team: [
@@ -137,7 +137,6 @@
         }
     };
 
-    // Function to fetch player and team boxscore data
     async function fetchBoxscores() {
         const gameName = "{{ game_name }}";
         const gameUrl = "{{ game_url }}";
@@ -150,18 +149,22 @@
 
             updateTeamBoxscoreTable(data.teams); // Populate the Team Boxscore
             allPlayers = data.players; // Store all players globally
+
+            // If no team is selected, auto-select the first team
+            if (!currentTeam && data.players.length > 0) {
+                currentTeam = data.players[0].Team;
+            }
+
             createTeamTabs(data.players); // Create tabs based on teams
-            updatePlayerBoxscoreTable(allPlayers); // Default to show all players
+            filterPlayersByTeam(currentTeam); // Filter to the current team
         }
     }
 
-    // Function to update the table headers dynamically
     function updateTableHeaders(tableId, columns) {
         const thead = document.querySelector(`#${tableId} thead`);
         thead.innerHTML = '<tr>' + columns.map(col => `<th>${col}</th>`).join('') + '</tr>';
     }
 
-    // Function to update the team boxscore table
     function updateTeamBoxscoreTable(teams) {
         const columns = columnConfigurations[currentSport]?.team || [];
         updateTableHeaders("team-boxscore-table", columns);
@@ -172,43 +175,34 @@
         teams.forEach(team => {
             const row = document.createElement('tr');
             row.innerHTML = columns.map(col => `<td>${team[col] || ''}</td>`).join('');
-            console.log("Generated Team Row:", row.innerHTML); // Debugging
+            console.log("Generated Team Row:", row.innerHTML);
             tbody.appendChild(row);
         });
     }
 
-    // Function to create team tabs dynamically
     function createTeamTabs(players) {
         const teamTabs = document.querySelector('.team-tabs');
         teamTabs.innerHTML = ''; // Clear existing tabs
 
-        // Get unique team names
         const teams = [...new Set(players.map(player => player.Team))];
 
-        // Create a tab for each team
         teams.forEach(team => {
             const button = document.createElement('button');
             button.className = 'team-tab';
             button.textContent = team;
-            button.onclick = () => filterPlayersByTeam(team); // Filter players by team on click
+            button.onclick = () => {
+                currentTeam = team; // Update the currently selected team
+                filterPlayersByTeam(team); // Filter players by team on click
+            };
             teamTabs.appendChild(button);
         });
-
-        // Add an "All" tab
-        const allButton = document.createElement('button');
-        allButton.className = 'team-tab';
-        allButton.textContent = 'All';
-        allButton.onclick = () => updatePlayerBoxscoreTable(allPlayers); // Show all players
-        teamTabs.appendChild(allButton);
     }
 
-    // Function to filter players by team
     function filterPlayersByTeam(team) {
         const filteredPlayers = allPlayers.filter(player => player.Team === team);
         updatePlayerBoxscoreTable(filteredPlayers);
     }
 
-    // Function to update the player boxscore table
     function updatePlayerBoxscoreTable(players) {
         const columns = columnConfigurations[currentSport]?.player || [];
         updateTableHeaders("player-boxscore-table", columns);
@@ -219,12 +213,11 @@
         players.forEach(player => {
             const row = document.createElement('tr');
             row.innerHTML = columns.map(col => `<td>${player[col] || ''}</td>`).join('');
-            console.log("Generated Player Row:", row.innerHTML); // Debugging
+            console.log("Generated Player Row:", row.innerHTML);
             tbody.appendChild(row);
         });
     }
 
-    // Fetch boxscores initially and refresh every 10 seconds
     fetchBoxscores();
     setInterval(fetchBoxscores, 10000);
 </script>
